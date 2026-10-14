@@ -1,7 +1,7 @@
 "use strict";
 
 // Display-only view transform. The model stays in NDC; the view maps NDC to CSS pixels:
-//   base(p)  = ((p.x + 1) * w / 2, (1 - p.y) * h / 2)      — the original 100% mapping
+//   base(p)  = ((p.x + 1) * w / 2, (1 - p.y) * h / 2)      - the original 100% mapping
 //   screen   = base(p) * scale + (offsetX, offsetY)
 // Nothing here ever touches polygon coordinates, history or exports.
 globalThis.MeshViewport = (() => {

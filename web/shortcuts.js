@@ -2,7 +2,7 @@
 
 // Centralized keyboard map. resolve() is pure: it turns a keydown event plus editor
 // context into { action, args } or null. The app owns the action implementations.
-// Returning null means "let the browser/WebView handle it" — we never preventDefault then.
+// Returning null means "let the browser/WebView handle it" - we never preventDefault then.
 globalThis.MeshShortcuts = (() => {
   const ARROWS = {
     ArrowLeft: [-1, 0],
@@ -35,7 +35,7 @@ globalThis.MeshShortcuts = (() => {
         case "z":
           return { action: e.shiftKey ? "redo" : "undo" };
         case "y":
-          // Ctrl+Y only — Cmd+Y is the history view in macOS browsers.
+          // Ctrl+Y only - Cmd+Y is the history view in macOS browsers.
           return e.ctrlKey && !e.shiftKey ? { action: "redo" } : null;
         case "c":
           return ctx.textSelected ? null : { action: "copy" };

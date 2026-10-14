@@ -52,7 +52,7 @@ const store = {
     try {
       localStorage.setItem(`meshsketch.${key}`, JSON.stringify(value));
     } catch {
-      /* storage unavailable (private mode) — preferences just won't persist */
+      /* storage unavailable (private mode) - preferences just won't persist */
     }
   },
 };
@@ -494,7 +494,7 @@ canvas.addEventListener("pointerleave", () => {
     mouseWorld = null;
     mouseScreen = null;
     hoverId = null;
-    $("cursorPosition").textContent = "X: —    Y: —";
+    $("cursorPosition").textContent = "X: -    Y: -";
     render();
   }
 });
@@ -530,7 +530,7 @@ function fitView() {
   V.fit(view, canvasSize, visible.length ? G.shapesBounds(visible) : null, 40);
   updateZoomUI();
   render();
-  setStatus(visible.length ? "Fit to view." : "Canvas kosong — zoom direset.");
+  setStatus(visible.length ? "Fit to view." : "Canvas kosong - zoom direset.");
 }
 function updateZoomUI() {
   $("zoomLabel").textContent = `${Math.round(view.scale * 100)}%`;
@@ -931,9 +931,9 @@ function updateExport() {
   } catch (err) {
     $("codeOutput").value =
       `// ${err.message}\n// Perbaiki titik polygon sebelum mengekspor.`;
-    $("vertexCount").textContent = "—";
-    $("triangleCount").textContent = "—";
-    $("indexCount").textContent = "—";
+    $("vertexCount").textContent = "-";
+    $("triangleCount").textContent = "-";
+    $("indexCount").textContent = "-";
   }
   const hidden = ed.shapes.filter((s) => s.hidden).length;
   $("hiddenNote").textContent = hidden ? `${hidden} tersembunyi, tidak diekspor` : "";
@@ -1671,7 +1671,7 @@ try {
     restored = true;
   }
 } catch {
-  /* corrupt or outdated autosave — fall back to the example */
+  /* corrupt or outdated autosave - fall back to the example */
 }
 if (!restored) ed.replaceAll(loadExample());
 ed.history = [];

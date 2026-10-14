@@ -87,7 +87,7 @@ globalThis.MeshGeometry = (() => {
 
   // Ear clipping triangulation: handles simple convex and concave polygons.
   // Output refers to each polygon's original vertex order. Clockwise input is walked in
-  // reverse, so emitted triangles are always counter-clockwise (OpenGL front faces) —
+  // reverse, so emitted triangles are always counter-clockwise (OpenGL front faces) -
   // flips and mirrored scales therefore never change the exported triangle winding.
   function triangulate(points) {
     if (validPolygon(points)) throw new Error("Polygon tidak valid.");
@@ -325,7 +325,7 @@ globalThis.MeshGeometry = (() => {
       "glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));",
       "glEnableVertexAttribArray(2);",
       "",
-      "// Render loop — semua objek sekaligus:",
+      "// Render loop - semua objek sekaligus:",
       "glBindVertexArray(VAO);",
       `glDrawElements(GL_TRIANGLES, ${mesh.indices.length * 3}, GL_UNSIGNED_INT, 0);`,
       "",
@@ -337,17 +337,36 @@ globalThis.MeshGeometry = (() => {
       );
     return lines.join("\n");
   }
+  // Columns are aligned: every float gets the same width (positives padded with a
+  // leading space for the minus sign) and a header comment names each attribute group.
   function exportCpp(mesh, { snippet = false } = {}) {
+    const rows = mesh.vertices.map((v) =>
+      [v.x, v.y, v.z, ...v.rgb, v.u, v.v].map(toFloat),
+    );
+    const width = Math.max(8, ...rows.flat().map((s) => s.replace("-", "").length + 1));
+    const cell = (s) => s.padStart(width);
+    const groups = [
+      ["Posisi (x, y, z)", 0, 3],
+      ["Warna (r, g, b)", 3, 6],
+      ["Tekstur (u, v)", 6, 8],
+    ];
+    const SEP = "    ";
+    const groupWidth = (a, b) => (b - a) * width + (b - a - 1) * 2 + 1; // incl. trailing ","
+    const header = groups
+      .map(([label, a, b], k) =>
+        k === groups.length - 1 ? `// ${label}` : `// ${label}`.padEnd(groupWidth(a, b) + SEP.length),
+      )
+      .join("");
     const lines = ["float vertices[] = {"];
-    mesh.vertices.forEach((v, i) => {
-      const fields = [v.x, v.y, v.z, ...v.rgb, v.u, v.v].map(toFloat);
-      lines.push(
-        `    ${fields.slice(0, 3).join(", ")},  ${fields.slice(3, 6).join(", ")},  ${fields.slice(6).join(", ")}, // ${i} · ${v.name}`,
-      );
+    if (rows.length) lines.push(`    ${header}`);
+    rows.forEach((fields, i) => {
+      const cols = groups.map(([, a, b]) => `${fields.slice(a, b).map(cell).join(", ")},`);
+      lines.push(`    ${cols.join(SEP)} // ${i} · ${mesh.vertices[i].name}`);
     });
     lines.push("};", "", "unsigned int indices[] = {");
+    const digits = Math.max(1, ...mesh.indices.flatMap((t) => t.i).map((n) => String(n).length));
     mesh.indices.forEach((tri) =>
-      lines.push(`    ${tri.i.join(", ")}, // ${tri.name}`),
+      lines.push(`    ${tri.i.map((n) => String(n).padStart(digits)).join(", ")}, // ${tri.name}`),
     );
     lines.push("};");
     return lines.join("\n") + (snippet && mesh.vertices.length ? `\n${setupSnippet(mesh)}` : "");

@@ -1,4 +1,4 @@
-/* MeshSketch UI — clean, neutral visual language (shadcn/ui-like tokens).
+/* MeshSketch UI - clean, neutral visual language (shadcn/ui-like tokens).
    Vanilla CSS only. No external fonts, dependencies, or frameworks. */
 :root {
   color-scheme: light;
@@ -532,7 +532,7 @@ input[type="color"]::-webkit-color-swatch {
   min-height: 18px;
 }
 .swatch-row:empty::after {
-  content: "—";
+  content: "-";
   color: var(--muted-foreground);
   font-size: 11px;
 }

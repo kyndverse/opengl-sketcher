@@ -21,7 +21,7 @@ globalThis.MeshEditor = (() => {
       nextGroupId: 1,
       clipboard: null,
       pasteCount: 0,
-      lastCoalesce: null, // { key, time } — merges rapid nudges into one entry
+      lastCoalesce: null, // { key, time } - merges rapid nudges into one entry
     };
 
     // ---------- lookup ----------
@@ -367,7 +367,7 @@ globalThis.MeshEditor = (() => {
     };
     // Flip mirrors positions but keeps vertex order; triangulate() re-normalizes winding.
     ed.flip = (axis) => (axis === "x" ? ed.scale(-1, 1) : ed.scale(1, -1));
-    // Sets the selection's bounding box (center + size) — used by the properties panel.
+    // Sets the selection's bounding box (center + size) - used by the properties panel.
     ed.setBounds = ({ cx, cy, w, h }) => {
       const b = ed.selectionBounds();
       if (!b) return { ok: false, error: "Tidak ada objek terpilih." };
